@@ -1,0 +1,91 @@
+PRACTICAL 4 - KMEANS 
+
+Aim: To pre-process the data and demonstrate the clustering algorithm of K-Means Clustering.
+
+
+import numpy as nm
+import matplotlib.pyplot as mtp
+import pandas as pd
+
+# Importing the dataset
+dataset = pd.read_csv('Mall_Customers.csv')
+
+x = dataset.iloc[:, [3, 4]].values#slicing of (:)all rows and (3,4)columns
+x.shape
+
+
+
+dataset.head()
+
+
+from sklearn.cluster import KMeans
+
+kmeans = KMeans(4,init="k-means++",random_state=42)#KMeans(no. of clusters, method, code reproducibility)
+y_predict = kmeans.fit_predict(x)
+y_predict
+
+
+mtp.scatter(x[y_predict == 0, 0], x[y_predict == 0, 1], s = 100, c = "blue", label ="Cluster") #for first cluster
+mtp.scatter(x[y_predict == 1, 0], x[y_predict == 1, 1], s = 100, c = "green",label="Cluster") #for second cluster
+mtp.scatter(x[y_predict== 2, 0], x[y_predict == 2, 1], s = 100, c ="red", label ="Cluster") #for third cluster
+mtp.scatter(x[y_predict== 3, 0], x[y_predict == 3, 1], s = 100, c ="pink", label ="Cluster") #for fourth cluster
+#mtp.scatter(x[y_predict== 4, 0], x[y_predict == 4, 1], s = 100, c ="cyan", label ="Cluster") for fifth cluster
+
+mtp.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], s = 300, c = "yellow", label = "Centroid")
+mtp.title("Clusters of customers")
+mtp.xlabel("Annual Income (k$)")
+mtp.ylabel("Spending Score (1-100)")
+mtp.legend()
+mtp.show()
+
+
+from sklearn.cluster import KMeans
+wcss_list= [] #Initializing the list for the values of WCSS
+#Using for loop for iterations from 1 to 10.
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, init="k-means++", random_state= 42)
+    kmeans.fit(x)
+    wcss_list.append(kmeans.inertia_)
+
+mtp.plot(range(1, 11), wcss_list)
+mtp.title("The Elobw Method Graph")
+mtp.xlabel("Number of clusters(k)")
+mtp.ylabel("wcss_list")
+
+mtp.show()
+
+
+# importing libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+dataset = pd.read_csv("Mall_Customers1.csv")
+X = dataset.iloc[:,2:5].values
+
+X.shape
+
+
+from sklearn.cluster import KMeans
+k_means_optimum = KMeans(n_clusters=2, init = "k-means++",random_state=42)
+y = k_means_optimum.fit_predict(X)
+y
+
+
+dataset["cluster"] = y
+# the above step adds extra column indicating the cluster number for each country
+data1 = dataset[dataset.cluster==0]
+data2 = dataset[dataset.cluster==1]
+kplot = plt.axes(projection="3d")
+kplot.scatter3D(data1.Age, data1.AI, data1.SS, c="red", label = "Cluster") # c --> 0  # aggregate --> value --> plot
+kplot.scatter3D(data2.Age, data2.AI, data2.SS,c="green", label="Cluster")  # c ---> 1 # aggregate --> value --> plot
+kplot.set_xlabel('Age')
+kplot.set_ylabel('AI')
+kplot.set_zlabel('SS')
+plt.show()
+
+from sklearn.metrics import silhouette_score
+score = silhouette_score(X,y)
+print(score)
+

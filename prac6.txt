@@ -1,0 +1,88 @@
+Practical 6 - APRIORI
+
+
+import numpy as nm
+import matplotlib.pyplot as mtp
+import pandas as pd
+
+
+dataset = pd.read_csv("groceries.csv")
+transactions=[]
+for i in range(0,99):
+
+  transactions.append([str(dataset.values[i,j]) for j in range(0,20)])
+
+
+
+
+pip install apyori
+
+
+from apyori import apriori
+rules= apriori(transactions= transactions, min_support=0.003, min_confidence = 0.2, min_lift=3,
+min_length=2, max_length=2)
+
+results= list(rules)
+results
+
+
+for item in results:
+  pair = item[0]
+  items = [x for x in pair]
+  print("Rule: " + items[0] + "->" + items[1])
+  print("Support: " + str(item[1]))
+  print("Confidence: " + str(item[2][0][2]))
+  print("Lift: " + str(item[2][0][3]))
+  print("=====================================")
+
+
+pip install openpyxl
+
+
+import pandas as pd
+from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import association_rules
+
+df = pd.read_csv("Online_Retail1.csv")
+
+df.head()
+
+df["Description"] = df["Description"].str.strip()
+df.dropna(axis=0, subset=["InvoiceNo"],inplace=True)
+df["InvoiceNo"] = df["InvoiceNo"].astype('str')
+df = df[~df['InvoiceNo'].str.contains('C')]
+df
+
+
+basket = (df[df["Country"] == "France"]
+          .groupby(['InvoiceNo', 'Description'])['Quantity']
+          .sum()
+          .unstack()
+          .reset_index()
+          .fillna(0)
+          .set_index('InvoiceNo'))
+
+basket
+
+
+def encode_units(x):
+  if x <= 0:
+    return 0
+  if x >= 1:
+    return 1
+
+basket_sets = basket.applymap(encode_units)
+basket_sets.drop('POSTAGE', inplace=True, axis=1)
+
+
+# Mine frequent itemsets
+frequent_itemsets = apriori(basket_sets, min_support=0.07, use_colnames=True)
+
+# Generate association rules using the lift metric and a minimum threshold of 1
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+
+# Display the first few rows of the generated rules
+rules.head()
+
+
+rules[(rules['lift']>=6) & (rules['confidence']>=0.8)]

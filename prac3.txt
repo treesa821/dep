@@ -1,0 +1,101 @@
+PRACTICAL 3 - To demonstrate classification algorithm of Decision Tree on the given dataset.
+
+
+import pandas as pd
+
+df = pd.read_csv("diabetes.csv")
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+df.info()
+
+
+
+X = df.iloc[:,[1,2]].values
+Y = df.iloc[:,-1].values
+X_train, X_test, Y_train, Y_test = train_test_split(X,Y,test_size=0.25,random_state=1)
+clf = DecisionTreeClassifier(criterion="entropy")
+clf=clf.fit(X_train,Y_train)
+Y_pred=clf.predict(X_test)
+
+from sklearn.metrics import confusion_matrix, accuracy_score
+cm = confusion_matrix(Y_test, Y_pred)
+print("Confusion Matrix: \n", cm)
+
+
+print("Accuracy: ", metrics.accuracy_score(Y_test, Y_pred))
+
+
+from sklearn import tree
+tree.plot_tree(clf)
+
+
+Part ()- Restrict the depth of the tree to 4 levels
+
+clf = DecisionTreeClassifier(criterion="entropy",max_depth=4)
+clf = clf.fit(X_train,Y_train)
+Y_pred=clf.predict(X_test)
+
+from sklearn.metrics import confusion_matrix, accuracy_score
+cm = confusion_matrix(Y_test, Y_pred)
+print("Confusion Matrix: \n", cm)
+
+
+print("Accuracy: ", metrics.accuracy_score(Y_test, Y_pred))
+
+from sklearn import tree
+tree.plot_tree(clf)
+
+Part ()- Restrict the depth of the tree to 2 levels
+
+clf = DecisionTreeClassifier(criterion="entropy",max_depth=2)
+clf = clf.fit(X_train,Y_train)
+Y_pred=clf.predict(X_test)
+
+from sklearn.metrics import confusion_matrix, accuracy_score
+cm = confusion_matrix(Y_test, Y_pred)
+print("Confusion Matrix: \n", cm)
+
+print("Accuracy: ", metrics.accuracy_score(Y_test, Y_pred))
+
+from sklearn import tree
+tree.plot_tree(clf)
+
+Part-4 Select the columns Glucose and Blood Pressure, develop decision tree model.
+
+X = df.iloc[:,[1,2]].values
+
+Y = df.iloc[:,-1].values
+
+X_train, X_test, Y_train, Y_test = train_test_split(X,Y,test_size=0.5,random_state=1)
+
+clf = clf.fit(X_train, Y_train)
+
+Y_pred = clf.predict([[180,70]])
+print(Y_pred)
+
+if(Y_pred==0):
+  print("Person has diabetes")
+else:
+  print("Person does not have diabetes")
+
+
+Accept the value of Glucose and Blood Pressure from the user
+
+glucose = int(input("Enter Glucose level: "))
+
+
+bloodPressure = int(input("Enter Blood pressure level: "))
+
+Y_pred=clf.predict([[glucose,bloodPressure]])
+print(Y_pred)
+
+if(Y_pred==0):
+  print("Person has diabetes")
+else:
+  print("Person does not have diabetes")
+
+
+
+
