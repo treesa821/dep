@@ -1,3 +1,5 @@
+#PRACTICAL 1
+
 print("Practical 1")
 print("Section 1")
 print("Data Preprocessing")
@@ -7,35 +9,58 @@ df = pd.read_csv("E:\\Journals\\DWM\\train.csv")
 
 df.info()
 
+#Find overall null values
+
 df.isnull().sum()
+
+#Remove the column Cabin 
 
 df = df.drop("Cabin",axis = 1)
 df.info()
 
+#Remove Name and Fare column together
+
 cols = ["Name","Fare"]
 df = df.drop(cols,axis = 1)
 df.info()
+
+
+#Calculate the MEAN of Age and replace any empty values with it in a new frame df2
 
 df1 = pd.read_csv("E:\\Journals\\DWM\\train.csv")
 mean_age = df1["Age"].mean()
 df1["Age"].fillna(mean_age,inplace = True)
 df1.isnull().sum()
 
+# Replace NULL values in the "Age" columns with the number 43 in a new frame df2
 df2 = df["Age"].fillna(43)
 df.info()
+
+
+#Replace null values in ‘Embarked’ to ‘NA’
 
 df["Embarked"].fillna('NA',inplace = True)
 df.info()
 
+#Remove the rows with empty cells
+
 df = df.dropna()
 df.info()
 
+#Count the number of unique values/levels within in each variable
+
 df.nunique()
+
+#Count the number of occurrences for each unique category within ‘Pclass’ column.
 
 df["Pclass"].value_counts()
 
+#Remove the Duplicates
+
 df.drop_duplicates(inplace = True)
 df.values
+
+
 
 from sklearn.model_selection import train_test_split
 df = pd.read_csv("E:\\Journals\\DWM\\train.csv")
